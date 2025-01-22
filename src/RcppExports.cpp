@@ -11,6 +11,38 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// loss_ridge_cpp
+double loss_ridge_cpp(const arma::vec& y, const arma::mat& A, const arma::vec& x, double lambda);
+RcppExport SEXP _code815_loss_ridge_cpp(SEXP ySEXP, SEXP ASEXP, SEXP xSEXP, SEXP lambdaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(loss_ridge_cpp(y, A, x, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gradient_descent_lsq_cpp
+Rcpp::List gradient_descent_lsq_cpp(const arma::vec& y, const arma::mat& A, const arma::vec& x0, double lambda, double gamma, double tol, int max_iter, bool printing);
+RcppExport SEXP _code815_gradient_descent_lsq_cpp(SEXP ySEXP, SEXP ASEXP, SEXP x0SEXP, SEXP lambdaSEXP, SEXP gammaSEXP, SEXP tolSEXP, SEXP max_iterSEXP, SEXP printingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type x0(x0SEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< bool >::type printing(printingSEXP);
+    rcpp_result_gen = Rcpp::wrap(gradient_descent_lsq_cpp(y, A, x0, lambda, gamma, tol, max_iter, printing));
+    return rcpp_result_gen;
+END_RCPP
+}
 // loss_ridge
 double loss_ridge(const arma::vec& y, const arma::mat& A, const arma::vec& x, double lambda);
 RcppExport SEXP _code815_loss_ridge(SEXP ySEXP, SEXP ASEXP, SEXP xSEXP, SEXP lambdaSEXP) {
@@ -27,6 +59,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_code815_loss_ridge_cpp", (DL_FUNC) &_code815_loss_ridge_cpp, 4},
+    {"_code815_gradient_descent_lsq_cpp", (DL_FUNC) &_code815_gradient_descent_lsq_cpp, 8},
     {"_code815_loss_ridge", (DL_FUNC) &_code815_loss_ridge, 4},
     {NULL, NULL, 0}
 };

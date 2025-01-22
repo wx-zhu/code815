@@ -7,5 +7,7 @@ Author: Michele Peruzzi
 Maintainer: Michele Peruzzi <peruzzi@umich.edu>
 Description: Code examples used in BIOSTAT 815.
 License: What license is it under?
-Imports: Rcpp (>= 1.0.13-1)
+Imports: 
+    Rcpp
 LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 7.3.2
