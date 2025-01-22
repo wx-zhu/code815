@@ -1,7 +1,7 @@
 
 
 ### functions
-loss.ridge <- function(y, A, x, lambda) {  # function definition // HL
+loss.ridge_R <- function(y, A, x, lambda) {  # function definition // HL
   #' Ridge regression Loss Function for Linear Models
   #'
   #' @param y      A (n x 1) vector of response variables
@@ -19,7 +19,8 @@ loss.ridge <- function(y, A, x, lambda) {  # function definition // HL
 
 
 ####
-gradient.descent.lsq<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max.iter=10000){
+gradient.descent.lsq_R <- function(y, A, x0,lambda,gamma, tol=0.0001, max.iter=10000, 
+                                   printing=FALSE){
   #' gamma is step size
   #' method is 'lasso' or 'ridge'
   n <- length(y)
@@ -31,14 +32,11 @@ gradient.descent.lsq<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max.it
   AA=t(A)%*%A
   Ay=t(A)%*%y
   grad = AA%*%x0-Ay    # gradient for the least squares
-  if(method=='lasso'){
-    loss=loss.lasso(y, A, x0, lambda)
-    grad=grad+lambda*sign(x0)
-  }
-  if(method=='ridge'){
-    loss=loss.ridge(y, A, x0, lambda)
-    grad=grad+2*lambda*x0
-  }
+
+  
+  loss=loss.ridge_R(y, A, x0, lambda)
+  grad=grad+2*lambda*x0
+  
   
   prevloss=loss
   x=x0
@@ -50,14 +48,10 @@ gradient.descent.lsq<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max.it
     x=x-gamma*grad # gradient descent
     grad = AA%*%x-Ay  # gradient for the least squares
     
-    if(method=='lasso'){
-      loss=loss.lasso(y, A, x, lambda)
-      grad=grad+lambda*sign(x)
-    }
-    if(method=='ridge'){
-      loss=loss.ridge(y, A, x, lambda)
-      grad=grad+2*lambda*x
-    }
+    
+    loss=loss.ridge_R(y, A, x, lambda)
+    grad=grad+2*lambda*x
+    
     diff.rec[iter]=(prevloss-loss)/abs(prevloss) # should be positive for properly chosen step size
     diff=abs(diff.rec[iter])
     
@@ -65,12 +59,13 @@ gradient.descent.lsq<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max.it
     prevloss=loss
     iter=iter+1
   }
-  print(paste0("converge after ",iter, " steps"))
+  if(printing) print(paste0("converge after ",iter, " steps"))
   return(list(x=x,diff=diff.rec,loss=loss.rec))
 }
   
 
-gradient.descent.lsq.v2<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max.iter=10000){
+gradient.descent.lsq.v2_R <- function(y, A, x0,lambda,gamma, tol=0.0001, max.iter=10000,
+                                      printing=FALSE){
   #' gamma is initial step size
   #' method is 'lasso' or 'ridge'
   n <- length(y)
@@ -82,14 +77,9 @@ gradient.descent.lsq.v2<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max
   AA=t(A)%*%A
   Ay=t(A)%*%y
   grad = AA%*%x0-Ay    # gradient for the least squares
-  if(method=='lasso'){
-    loss=loss.lasso(y, A, x0, lambda)
-    grad=grad+lambda*sign(x0)
-  }
-  if(method=='ridge'){
-    loss=loss.ridge(y, A, x0, lambda)
-    grad=grad+2*lambda*x0
-  }
+  
+  loss=loss.ridge_R(y, A, x0, lambda)
+  grad=grad+2*lambda*x0
   
   prevloss=loss
   x=x0
@@ -101,14 +91,8 @@ gradient.descent.lsq.v2<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max
     x=x-gamma*grad # gradient descent
     grad = AA%*%x-Ay  # gradient for the least squares
     
-    if(method=='lasso'){
-      loss=loss.lasso(y, A, x, lambda)
-      grad=grad+lambda*sign(x)
-    }
-    if(method=='ridge'){
-      loss=loss.ridge(y, A, x, lambda)
-      grad=grad+2*lambda*x
-    }
+    loss=loss.ridge_R(y, A, x, lambda)
+    grad=grad+2*lambda*x
     
     diff.rec[iter]=(prevloss-loss)/abs(prevloss) 
     
@@ -124,13 +108,14 @@ gradient.descent.lsq.v2<-function(y, A, x0,lambda,gamma, method, tol=0.0001, max
     prevloss=loss
     iter=iter+1
   }
-  print(paste0("converge after ",iter, " steps"))
+  if(printing) print(paste0("converge after ",iter, " steps"))
   return(list(x=x,diff=diff.rec,loss=loss.rec))
 }
 
 ######################################################
 
-gradient.descent.BB.lsq<-function(y, A, x0,lambda,method, tol=0.0001, max.iter=10000){
+gradient.descent.BB.lsq_R <- function(y, A, x0,lambda, tol=0.0001, max.iter=10000,
+                                      printing=FALSE){
   #' use BB method to determine adaptive step sizes
   #' method is 'lasso' or 'ridge'
   n <- length(y)
@@ -142,14 +127,10 @@ gradient.descent.BB.lsq<-function(y, A, x0,lambda,method, tol=0.0001, max.iter=1
   AA=t(A)%*%A
   Ay=t(A)%*%y
   grad = AA%*%x0-Ay    # gradient for the least squares
-  if(method=='lasso'){
-    loss=loss.lasso(y, A, x0, lambda)
-    grad=grad+lambda*sign(x0)
-  }
-  if(method=='ridge'){
-    loss=loss.ridge(y, A, x0, lambda)
-    grad=grad+2*lambda*x0
-  }
+  
+  loss=loss.ridge_R(y, A, x0, lambda)
+  grad=grad+2*lambda*x0
+
   x=x0-grad # gradient descent
   prevx=x0
   prevgrad=grad
@@ -159,12 +140,9 @@ gradient.descent.BB.lsq<-function(y, A, x0,lambda,method, tol=0.0001, max.iter=1
   diff.rec=c()
   while(iter<max.iter & diff>tol) {
     grad = AA%*%x-Ay  # gradient for the least squares
-    if(method=='lasso'){
-      grad=grad+lambda*sign(x)
-    }
-    if(method=='ridge'){
-      grad=grad+2*lambda*x
-    }
+    
+    grad=grad+2*lambda*x
+    
     gamma=crossprod(x-prevx,x-prevx)/crossprod(x-prevx,grad-prevgrad)
     # print(gamma)
     # gradient descent
@@ -172,12 +150,8 @@ gradient.descent.BB.lsq<-function(y, A, x0,lambda,method, tol=0.0001, max.iter=1
     prevgrad=grad
     prevloss=loss
     x=prevx-c(gamma)*prevgrad
-    if(method=='lasso'){
-      loss=loss.lasso(y, A, x, lambda)
-    }
-    if(method=='ridge'){
-      loss=loss.ridge(y, A, x, lambda)
-    }
+    
+    loss=loss.ridge_R(y, A, x, lambda)
     
     diff.rec[iter]=(prevloss-loss)/abs(prevloss) # should be positive for properly chosen step size
     diff=abs(diff.rec[iter])
@@ -187,13 +161,14 @@ gradient.descent.BB.lsq<-function(y, A, x0,lambda,method, tol=0.0001, max.iter=1
     prevloss=loss
     iter=iter+1
   }
-  print(paste0("converge after ",iter, " steps"))
+  if(printing) print(paste0("converge after ",iter, " steps"))
   return(list(x=x,diff=diff.rec))
 }
 
 ####################################################
 
-stochastic.gradient.descent.lsq<-function(y, A, x0,lambda, batch, initial.step.size=1, method, tol=1E-6, max.iter=10000){
+stochastic.gradient.descent.lsq_R <- function(y, A, x0,lambda, batch, initial.step.size=1, 
+                                              tol=1E-6, max.iter=10000, printing=FALSE){
   #' method is 'lasso' or 'ridge'
   #' batch is batch size, ranging from 1 to n (original gradient descent)
   n <- length(y)
@@ -207,14 +182,9 @@ stochastic.gradient.descent.lsq<-function(y, A, x0,lambda, batch, initial.step.s
   AA=t(Asub)%*%Asub
   Ay=t(Asub)%*%ysub
   grad = (AA%*%x0-Ay)/batch    # gradient for the least squares
-  if(method=='lasso'){
-    loss=loss.lasso(y, A, x0, lambda)
-    grad=grad+lambda*sign(x0)/n
-  }
-  if(method=='ridge'){
-    loss=loss.ridge(y, A, x0, lambda)
-    grad=grad+2*lambda*x0/n
-  }
+  
+  loss=loss.ridge_R(y, A, x0, lambda)
+  grad=grad+2*lambda*x0/n
   
   prevloss=loss
   x=x0
@@ -232,14 +202,10 @@ stochastic.gradient.descent.lsq<-function(y, A, x0,lambda, batch, initial.step.s
     Ay=t(Asub)%*%ysub
     grad = (AA%*%x-Ay)/batch   # gradient for the least squares
     
-    if(method=='lasso'){
-      loss=loss.lasso(y, A, x, lambda)
-      grad=grad+lambda*sign(x)/n
-    }
-    if(method=='ridge'){
-      loss=loss.ridge(y, A, x, lambda)
-      grad=grad+2*lambda*x/n
-    }
+    
+    loss=loss.ridge_R(y, A, x, lambda)
+    grad=grad+2*lambda*x/n
+    
     diff.rec[iter]=(prevloss-loss)/abs(prevloss) 
     diff=abs(diff.rec[iter])
     
@@ -248,7 +214,7 @@ stochastic.gradient.descent.lsq<-function(y, A, x0,lambda, batch, initial.step.s
     iter=iter+1
     # print(iter)
   }
-  print(paste0("converge after ",iter, " steps"))
+  if(printing) print(paste0("converge after ",iter, " steps"))
   return(list(x=x,diff=diff.rec,loss=loss.rec))
 }
 
