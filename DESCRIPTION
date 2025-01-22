@@ -1,0 +1,11 @@
+Package: code815
+Type: Package
+Title: Code examples used in BIOSTAT 815
+Version: 1.0
+Date: 2025-01-21
+Author: Michele Peruzzi
+Maintainer: Michele Peruzzi <peruzzi@umich.edu>
+Description: Code examples used in BIOSTAT 815.
+License: What license is it under?
+Imports: Rcpp (>= 1.0.13-1)
+LinkingTo: Rcpp, RcppArmadillo
